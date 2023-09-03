@@ -1,0 +1,17 @@
+name: read_morex
+description: Display text with the option to expand, collapse it and also apply custom text filters to highlight or modify specific patterns within the text.
+version: 1.0.0
+homepage: https://github.com/tro1d/read_morex
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
