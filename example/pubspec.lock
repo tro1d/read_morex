@@ -118,8 +118,8 @@ packages:
   read_morex:
     dependency: "direct main"
     description:
-      path: "C:/src/git_repo/read_morex"
-      relative: false
+      path: ".."
+      relative: true
     source: path
     version: "1.0.0"
   sky_engine:

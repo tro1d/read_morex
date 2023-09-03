@@ -2,7 +2,7 @@
 
 The `read_morex` package is a Flutter widget that allows you to manage the display of long text with a "Read More" button that lets users expand to view the entire text or collapse it to a shorter version. It allows you to set a maximum number of lines and a maximum length for the text. When the content exceeds these limits, it provides a 'Read more' link, allowing users to see the full content, and a 'Show less' link to collapse it again. You can also apply custom text filters using regular expressions to highlight or modify specific patterns within the text. This widget offers flexibility and control over how text content is displayed and filtered within your Flutter app.
 
-![Example Screenshot](example/read_morex_example.gif)
+![Example Screenshot](https://github.com/tro1d/read_morex/blob/master/example/read_morex_example.gif?raw=true)
 
 ## Installation
 
@@ -77,4 +77,4 @@ ReadMoreX(
 ),
 ```
 
-Full example can be found at [`example/lib/post_card.dart`](example/lib/post_card.dart).
+Full example can be found at [`example/lib/post_card.dart`](https://github.com/tro1d/read_morex/blob/master/example/lib/main.dart).
