@@ -77,4 +77,4 @@ ReadMoreX(
 ),
 ```
 
-Full example can be found at [`example/lib/post_card.dart`](https://github.com/tro1d/read_morex/blob/master/example/lib/main.dart).
+Full example can be found at [`example/lib/main.dart`](https://github.com/tro1d/read_morex/blob/master/example/lib/main.dart).
