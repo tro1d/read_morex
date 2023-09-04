@@ -263,7 +263,13 @@ class _ReadMoreXState extends State<ReadMoreX> {
             listSpan.add(
               WidgetSpan(
                 child: GestureDetector(
-                  onTap: () => pattern.onTap?.call(contentWord),
+                  onTap: () {
+                    if (isReadMore) {
+                      pattern.onTap?.call(contentWord);
+                    } else {
+                      setState(() => isReadMore = !isReadMore);
+                    }
+                  },
                   child: Text(
                     hasValueChanged ? '${pattern.valueChanged?.call(contentWord)} ' : '$contentWord ',
                     style: textStyle.copyWith(

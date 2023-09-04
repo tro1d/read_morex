@@ -9,7 +9,7 @@ The `read_morex` package is a Flutter widget that allows you to manage the displ
 You can import the `read_morex` package into your Flutter project by adding the following dependency to your `pubspec.yaml` file:
 ```yaml
 dependencies:
-  read_morex: ^1.0.1
+  read_morex: ^1.0.2
 ```
 Don't forget to run flutter pub get after adding this dependency.
 
@@ -20,7 +20,7 @@ Here's how to use it:
 import 'package:read_morex/read_morex.dart';
 ```
 #### Use the ReadMoreX widget in your layout:
-#### `[Read More]`
+#### `Read More`
 ```Dart
 ReadMoreX(
     'This is a very long text. You can tap the "Read More" button to see more text. Suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam. Eu nisl nunc mi ipsum faucibus vitae aliquet nec.',
@@ -29,7 +29,7 @@ ReadMoreX(
     fontWeightLabel: FontWeight.normal,
 ),
 ```
-#### `[Read More with Filter]`
+#### `Read More with Filter`
 ```Dart
 ReadMoreX(
     'Link: https://github.com/tro1d\nAlternative link: https://flutter.dev\n\nEmail: readmorex@demo.com\nPhone: 0808080889',
