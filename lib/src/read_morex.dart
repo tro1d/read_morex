@@ -102,8 +102,9 @@ class ReadMoreX extends StatefulWidget {
 
 class _ReadMoreXState extends State<ReadMoreX> {
   bool isReadMore = false;
-  String patternNewline = ' @@newLine@@=> ';
-  Pattern patternSpace = r' ';
+  String pNewline = r' @@newLine@@=> ';
+  String pNewTab = r' @@newTab@@=> ';
+  String pSpace = r' ';
 
   String content = '';
   String readMoreLabel = '';
@@ -135,83 +136,17 @@ class _ReadMoreXState extends State<ReadMoreX> {
 
   List<InlineSpan> get textSpanChildren {
     if (filterContent) {
-      return _maximumWords(_filter(filterLineAndLength));
+      return maximumWords(
+        filter(
+          filterPattern(
+            filterLineAndLength(content),
+          ).trim(),
+        ),
+      );
     } else {
-      return _maximumWords([TextSpan(text: filterLineAndLength)]);
-    }
-  }
-
-  String get filterLineAndLength {
-    String text = '';
-
-    if (!isReadMore) {
-      final List<String> splitLine = content.split('\n');
-      final bool isMaxLength = content.length > (maxLength < 1 ? 1 : maxLength);
-      final bool isMaxLine = splitLine.length >= (maxLine < 1 ? 1 : maxLine);
-      if (isMaxLength) {
-        text = content.substring(0, maxLength);
-      } else if (isMaxLine) {
-        final words = '${splitLine[0]}${splitLine[1]}${splitLine[2]}';
-        text = content.substring(0, words.length);
-      } else {
-        text = content;
-      }
-    } else {
-      text = content;
-    }
-
-    String result = '';
-
-    if (filterContent) {
-      if (customFilter.isNotEmpty) {
-        for (int i = 0; i < customFilter.length; i++) {
-          if (i < 1) {
-            result = _patternfilter(text, customFilter[i]);
-          } else {
-            result = _patternfilter(result, customFilter[i]);
-          }
-        }
-        return result;
-      } else {
-        return text;
-      }
-    } else {
-      return text;
-    }
-  }
-
-  String get filterLineAndLengthX {
-    String text = '';
-    if (filterContent) {
-      if (customFilter.isNotEmpty) {
-        for (int i = 0; i < customFilter.length; i++) {
-          if (i < 1) {
-            text = _patternfilter(content, customFilter[i]);
-          } else {
-            text = _patternfilter(text, customFilter[i]);
-          }
-        }
-      } else {
-        text = content;
-      }
-    } else {
-      text = content;
-    }
-
-    if (!isReadMore) {
-      final List<String> splitLine = text.split('\n');
-      final bool isMaxLength = text.length > (maxLength < 1 ? 1 : maxLength);
-      final bool isMaxLine = splitLine.length >= (maxLine < 1 ? 1 : maxLine);
-      if (isMaxLength) {
-        return text.substring(0, maxLength);
-      } else if (isMaxLine) {
-        final words = '${splitLine[0]}${splitLine[1]}${splitLine[2]}';
-        return text.substring(0, words.length);
-      } else {
-        return text;
-      }
-    } else {
-      return text;
+      return maximumWords(
+        [TextSpan(text: filterLineAndLength(content))],
+      );
     }
   }
 
@@ -220,42 +155,65 @@ class _ReadMoreXState extends State<ReadMoreX> {
     return Text.rich(
       style: textStyle,
       textAlign: textAlign,
-      TextSpan(children: textSpanChildren),
+      TextSpan(
+        children: textSpanChildren,
+      ),
     );
   }
 
-  String _patternfilter(String str, ReadMoreXPattern pattern) {
-    if (str.contains(RegExp(pattern.pattern))) {
-      final splitSpace = str.split(patternSpace);
-      final res = List.generate(
-        splitSpace.length,
-        (index) {
-          final word = splitSpace[index].replaceAll('\n', patternNewline);
-          if (!word.contains(RegExp(pattern.pattern))) {
-            return '$word ';
-          } else {
-            if (word.contains(RegExp(r'@@(.*?)@@=>')) && !word.contains(patternNewline)) {
-              return '$word ';
-            } else {
-              return '@@${pattern.pattern}@@=>$word ';
-            }
-          }
-        },
-      ).join('');
-      return res;
-    } else {
-      return str;
+  List<InlineSpan> maximumWords(List<InlineSpan> listSpan) {
+    List<InlineSpan> result = listSpan;
+    final List<String> splitLine = content.split('\n');
+    if (content.length > (maxLength < 1 ? 1 : maxLength) || splitLine.length >= (maxLine < 1 ? 1 : maxLine)) {
+      result.add(
+        WidgetSpan(
+          child: GestureDetector(
+            onTap: () => setState(() => isReadMore = !isReadMore),
+            child: Text(
+              isReadMore ? showLessLabel : readMoreLabel,
+              style: textStyle.copyWith(
+                color: readMoreColor,
+                fontWeight: fontWeightLabel,
+              ),
+            ),
+          ),
+        ),
+      );
     }
+    return result;
   }
 
-  List<InlineSpan> _filter(String str) {
-    List<InlineSpan> listSpan = [];
-    List<String> splitSpace = str.split(patternSpace);
-    for (int splitIndex = 0; splitIndex < splitSpace.length; splitIndex++) {
-      final word = splitSpace[splitIndex];
+  String filterLineAndLength(String data) {
+    String result = '';
+    if (!isReadMore) {
+      final List<String> splitLine = data.split('\n');
+      final bool isMaxLength = data.length > (maxLength < 1 ? 1 : maxLength);
+      final bool isMaxLine = splitLine.length >= (maxLine < 1 ? 1 : maxLine);
+      if (isMaxLength) {
+        result = data.substring(0, maxLength);
+      } else if (isMaxLine) {
+        final words = '${splitLine[0]}${splitLine[1]}${splitLine[2]}';
+        result = data.substring(0, words.length);
+      } else {
+        result = data;
+      }
+    } else {
+      result = data;
+    }
+    return result;
+  }
 
+  List<InlineSpan> filter(String data) {
+    List<InlineSpan> listSpan = [];
+    List<String> splitSpace = data.split(pSpace);
+    for (int i = 0; i < splitSpace.length; i++) {
+      final word = splitSpace[i];
       final match = RegExp(r'@@(.*?)@@=>').firstMatch(word);
-      if (match != null) {
+      if (match == null) {
+        listSpan.add(TextSpan(text: '$word '));
+      } else {
+        if (pNewline.contains(match.group(0)!)) listSpan.add(const TextSpan(text: '\n'));
+        if (pNewTab.contains(match.group(0)!)) listSpan.add(const TextSpan(text: '\t'));
         for (ReadMoreXPattern pattern in customFilter) {
           if ('@@${pattern.pattern}@@=>'.contains(match.group(0)!)) {
             final contentWord = word.replaceFirst(match.pattern, '');
@@ -282,35 +240,46 @@ class _ReadMoreXState extends State<ReadMoreX> {
             );
           }
         }
-        if (patternNewline.contains(match.group(0)!)) {
-          listSpan.add(const TextSpan(text: '\n'));
-        }
-      } else {
-        listSpan.add(TextSpan(text: '$word '));
       }
     }
     return listSpan;
   }
 
-  List<InlineSpan> _maximumWords(List<InlineSpan> listSpan) {
-    List<InlineSpan> result = listSpan;
-    final List<String> splitLine = content.split('\n');
-    if (content.length > (maxLength < 1 ? 1 : maxLength) || splitLine.length >= (maxLine < 1 ? 1 : maxLine)) {
-      result.add(
-        WidgetSpan(
-          child: GestureDetector(
-            onTap: () => setState(() => isReadMore = !isReadMore),
-            child: Text(
-              isReadMore ? showLessLabel : readMoreLabel,
-              style: textStyle.copyWith(
-                color: readMoreColor,
-                fontWeight: fontWeightLabel,
-              ),
-            ),
-          ),
-        ),
-      );
+  String filterPattern(String data) {
+    String result = '';
+    if (customFilter.isNotEmpty) {
+      String rep = data.replaceAll(RegExp(r'\n'), pNewline);
+      rep = rep.replaceAll(RegExp(r'\t'), pNewTab);
+      for (var i = 0; i < customFilter.length; i++) {
+        if (i < 1) {
+          result = _filterPattern(rep, customFilter[i]);
+        } else {
+          result = _filterPattern(result, customFilter[i]);
+        }
+      }
     }
     return result;
+  }
+
+  String _filterPattern(String data, ReadMoreXPattern patterns) {
+    final splitSpace = data.split(pSpace);
+    final res = List.generate(
+      splitSpace.length,
+      (index) {
+        final word = splitSpace[index];
+        if (!word.contains(RegExp(patterns.pattern))) {
+          return '$word$pSpace';
+        } else if (word.contains(RegExp(pNewline)) || word.contains(RegExp(pNewTab))) {
+          return '$word$pSpace';
+        } else {
+          if (word.contains(RegExp(r'@@(.*?)@@=>'))) {
+            return '$word$pSpace';
+          } else {
+            return '@@${patterns.pattern}@@=>$word$pSpace';
+          }
+        }
+      },
+    );
+    return res.join();
   }
 }

@@ -1,3 +1,5 @@
+## 1.1.0
+* ✅ Fixing the bug pattern and others.
 ## 1.0.2
 * ✅ Fixing the bug of clicking a highlight before the text is expanded.
 ## 1.0.1
