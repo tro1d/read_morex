@@ -9,7 +9,7 @@ The `read_morex` package is a Flutter widget that allows you to manage the displ
 You can import the `read_morex` package into your Flutter project by adding the following dependency to your `pubspec.yaml` file:
 ```yaml
 dependencies:
-  read_morex: ^1.1.0
+  read_morex: ^1.2.0
 ```
 Don't forget to run flutter pub get after adding this dependency.
 
