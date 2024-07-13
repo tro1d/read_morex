@@ -1,4 +1,4 @@
-part of read_morex;
+part of '../read_morex.dart';
 
 class ReadMoreX extends StatefulWidget {
   /// The text content to be displayed.
@@ -77,6 +77,7 @@ class ReadMoreX extends StatefulWidget {
   /// This widget offers flexibility and control over how text content is displayed and filtered within your Flutter app.
   const ReadMoreX(
     this.content, {
+    super.key,
     this.readMoreLabel,
     this.showLessLabel,
     this.fontWeightLabel,
@@ -93,8 +94,7 @@ class ReadMoreX extends StatefulWidget {
 
     /// The color to use for filtered content.
     this.readMoreColor,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   State<ReadMoreX> createState() => _ReadMoreXState();
@@ -106,21 +106,43 @@ class _ReadMoreXState extends State<ReadMoreX> {
   String pNewTab = r' @@newTab@@=> ';
   String pSpace = r' ';
 
-  String content = '';
-  String readMoreLabel = '';
-  String showLessLabel = '';
-  FontWeight fontWeightLabel = FontWeight.w600;
-  int maxLine = 3;
-  int maxLength = 160;
-  TextStyle textStyle = const TextStyle();
+  late String content;
+  late String readMoreLabel;
+  late String showLessLabel;
+  late FontWeight fontWeightLabel;
+  late int maxLine;
+  late int maxLength;
+  late TextStyle textStyle;
   TextAlign? textAlign;
-  bool filterContent = false;
-  List<ReadMoreXPattern> customFilter = [];
-  Color readMoreColor = const Color(0xFF2196F3);
+  late bool filterContent;
+  late List<ReadMoreXPattern> customFilter;
+  late Color readMoreColor;
 
   @override
   void initState() {
     super.initState();
+    _updateParameters();
+  }
+
+  @override
+  void didUpdateWidget(covariant ReadMoreX oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.content != oldWidget.content ||
+        widget.readMoreLabel != oldWidget.readMoreLabel ||
+        widget.showLessLabel != oldWidget.showLessLabel ||
+        widget.fontWeightLabel != oldWidget.fontWeightLabel ||
+        widget.maxLine != oldWidget.maxLine ||
+        widget.maxLength != oldWidget.maxLength ||
+        widget.textStyle != oldWidget.textStyle ||
+        widget.textAlign != oldWidget.textAlign ||
+        widget.filterContent != oldWidget.filterContent ||
+        widget.customFilter != oldWidget.customFilter ||
+        widget.readMoreColor != oldWidget.readMoreColor) {
+      _updateParameters();
+    }
+  }
+
+  void _updateParameters() {
     content = widget.content;
     readMoreLabel = widget.readMoreLabel ?? '...Read more';
     showLessLabel = widget.showLessLabel ?? 'Show less';
@@ -164,7 +186,8 @@ class _ReadMoreXState extends State<ReadMoreX> {
   List<InlineSpan> maximumWords(List<InlineSpan> listSpan) {
     List<InlineSpan> result = listSpan;
     final List<String> splitLine = content.split('\n');
-    if (content.length > (maxLength < 1 ? 1 : maxLength) || splitLine.length >= (maxLine < 1 ? 1 : maxLine)) {
+    if (content.length > (maxLength < 1 ? 1 : maxLength) ||
+        splitLine.length >= (maxLine < 1 ? 1 : maxLine)) {
       result.add(
         WidgetSpan(
           child: GestureDetector(
@@ -217,7 +240,8 @@ class _ReadMoreXState extends State<ReadMoreX> {
         for (ReadMoreXPattern pattern in customFilter) {
           if ('@@${pattern.pattern}@@=>'.contains(match.group(0)!)) {
             final contentWord = word.replaceFirst(match.pattern, '');
-            final hasValueChanged = pattern.valueChanged != null && pattern.valueChanged!.call(contentWord)!.isNotEmpty;
+            final hasValueChanged =
+                pattern.valueChanged != null && pattern.valueChanged!.call(contentWord)!.isNotEmpty;
             listSpan.add(
               WidgetSpan(
                 child: GestureDetector(
@@ -229,7 +253,9 @@ class _ReadMoreXState extends State<ReadMoreX> {
                     }
                   },
                   child: Text(
-                    hasValueChanged ? '${pattern.valueChanged?.call(contentWord)} ' : '$contentWord ',
+                    hasValueChanged
+                        ? '${pattern.valueChanged?.call(contentWord)} '
+                        : '$contentWord ',
                     style: textStyle.copyWith(
                       color: pattern.colorChanged ?? readMoreColor,
                       decoration: pattern.textDecoration,

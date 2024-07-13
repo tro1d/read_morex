@@ -27,7 +27,8 @@ class MainApp extends StatelessWidget {
                 ),
                 PostCard(
                   userName: 'Read More with Filter',
-                  content: 'Link: https://github.com/tro1d\nAlternative link: https://flutter.dev\nEmail: readmorex@demo.com\nPhone: 0808080889',
+                  content:
+                      'Link: https://github.com/tro1d\nAlternative link: https://flutter.dev\nEmail: readmorex@demo.com\nPhone: 0808080889',
                 ),
               ],
             ),
@@ -39,7 +40,7 @@ class MainApp extends StatelessWidget {
 }
 
 class PostCard extends StatelessWidget {
-  const PostCard({Key? key, required this.userName, required this.content}) : super(key: key);
+  const PostCard({super.key, required this.userName, required this.content});
 
   final String userName;
   final String content;
@@ -86,7 +87,8 @@ class PostCard extends StatelessWidget {
                     customFilter: <ReadMoreXPattern>[
                       ReadMoreXPattern(
                         pattern: r'github.com',
-                        valueChanged: (value) => value?.replaceFirst('https://github.com/', 'Github '),
+                        valueChanged: (value) =>
+                            value?.replaceFirst('https://github.com/', 'Github '),
                         onTap: (value) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('This Number $value')),

@@ -1,4 +1,4 @@
-part of read_morex;
+part of '../read_morex.dart';
 
 class ReadMoreXPattern {
   /// The regular expression pattern to be used for text filtering.
